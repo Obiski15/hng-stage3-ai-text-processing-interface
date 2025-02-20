@@ -7,21 +7,31 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  body {
+    @apply min-w-[360px] max-w-[1440px];
+  }
+
+  textarea,
+  input {
+    @apply focus:outline-none bg-transparent;
+  }
+
+  button,
+  textarea,
+  input {
+    @apply disabled:cursor-not-allowed;
   }
 }
