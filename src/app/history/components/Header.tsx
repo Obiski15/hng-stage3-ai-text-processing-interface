@@ -19,7 +19,7 @@ function Header() {
         <p className="text-lg font-medium">History</p>
       </div>
 
-      <div className="text-[14px]">Clear all</div>
+      <div className="text-[14px] cursor-pointer">Clear all</div>
     </div>
   );
 }
