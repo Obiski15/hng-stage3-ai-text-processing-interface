@@ -148,10 +148,19 @@ function Main() {
                 height={24}
                 onClick={() => {
                   if (!getValues()?.targetText) return;
-                  navigator.share({
-                    title: "AI Processed Text",
-                    text: getValues()?.targetText,
-                  });
+                  if (
+                    navigator.canShare({
+                      title: "AI Processed Text",
+                      text: getValues()?.targetText,
+                    })
+                  ) {
+                    navigator.share({
+                      title: "AI Processed Text",
+                      text: getValues()?.targetText,
+                    });
+                  } else {
+                    toast.error("Browser not supported");
+                  }
                 }}
               />
               <Image
@@ -165,9 +174,22 @@ function Main() {
           </div>
 
           <div className="p-5 bg-box shadow-box flex flex-col gap-4 rounded-2xl sm:flex-1">
-            <h3 className="text-[#003366] font-medium text-base capitalize">
-              Source Language
-            </h3>
+            <div className="w-full flex justify-between items-center text-[#003366] font-medium text-base capitalize">
+              <h3>Source Language</h3>
+              {textInput?.length > 0 && (
+                <Image
+                  className="cursor-pointer"
+                  src="/icons/close.svg"
+                  alt="star"
+                  width={24}
+                  height={24}
+                  onClick={() => {
+                    setValue("sourceText", "");
+                    setValue("targetText", "");
+                  }}
+                />
+              )}
+            </div>
 
             <textarea
               className="w-full h-fit resize-none min-h-[250px]"

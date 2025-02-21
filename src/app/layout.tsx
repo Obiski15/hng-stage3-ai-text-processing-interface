@@ -17,7 +17,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Create Next App",
+  title: "AI Text Processing Interface",
   description: "AI Text Processing Interface",
 };
 
