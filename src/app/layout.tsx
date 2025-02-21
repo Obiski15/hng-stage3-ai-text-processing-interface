@@ -28,6 +28,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta
+          httpEquiv="origin-trial"
+          content={process.env.NEXT_PUBLIC_SUMMARIZER_ORIGIN_TOKEN}
+        />
+        <meta
+          httpEquiv="origin-trial"
+          content={process.env.NEXT_PUBLIC_TRANSLATOR_ORIGIN_TOKEN}
+        />
+        <meta
+          httpEquiv="origin-trial"
+          content={process.env.NEXT_PUBLIC_LANGUAGE_DETECTOR_ORIGIN_TOKEN}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
