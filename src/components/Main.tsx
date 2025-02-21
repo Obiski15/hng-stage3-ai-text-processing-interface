@@ -79,6 +79,9 @@ function Main() {
   }, [detectedLanguage, setValue]);
 
   function handleSummary() {
+    if (selectedSourceLanguage !== "en")
+      return toast.error("Only text in english can be summarized");
+
     summarizeText(textInput, {
       onSuccess: (data) => {
         setValue("targetText", data);
