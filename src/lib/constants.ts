@@ -15,3 +15,5 @@ export const SUPPORTED_LANGUAGES_FLAGS: { [key: string]: string } = {
   tr: "🇹🇷",
   en: "🇬🇧",
 };
+
+export const TRANSLATE_HISTORY_STORAGE_KEY: string = "TRANSLATE_HISTORY";

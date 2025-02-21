@@ -9,9 +9,11 @@ import { useTranslateLanguage } from "@/services/useTranslateLanguage";
 import { useDetectLanguage } from "@/services/useDetectLanguage";
 import { useSummarizeText } from "@/services/useSummarizeText";
 import { useDebounceTerm } from "@/hooks/useDebounceTerm";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import {
   SUPPORTED_LANGUAGES,
   SUPPORTED_LANGUAGES_FLAGS,
+  TRANSLATE_HISTORY_STORAGE_KEY,
 } from "@/lib/constants";
 
 import Dropdown from "./Dropdown";
@@ -53,6 +55,13 @@ function Main() {
     useTranslateLanguage();
   const { isLoading: isSummarizing, mutate: summarizeText } =
     useSummarizeText();
+  const { value: history, setValue: setHistory } = useLocalStorage<
+    {
+      id: number;
+      target: { language: string; value: string };
+      source: { language: string; value: string };
+    }[]
+  >(TRANSLATE_HISTORY_STORAGE_KEY, []);
 
   useEffect(() => {
     if (detectedLanguage) {
@@ -96,6 +105,16 @@ function Main() {
         onError: () =>
           toast.error("Unable to process your request. Pls try again"),
       }
+    );
+  }
+
+  function isInHistory() {
+    return history.find(
+      (his) =>
+        his.source.value === textInput &&
+        his.source.language === selectedSourceLanguage &&
+        his.target.language === selectedTargetLanguage &&
+        his.target.value === getValues().targetText
     );
   }
 
@@ -163,13 +182,53 @@ function Main() {
                   }
                 }}
               />
-              <Image
-                className="cursor-pointer"
-                src="/icons/star.svg"
-                alt="star"
-                width={24}
-                height={24}
-              />
+              {isInHistory() ? (
+                <Image
+                  className="cursor-pointer"
+                  src="/icons/star-active.svg"
+                  alt="star"
+                  width={24}
+                  height={24}
+                  onClick={() => {
+                    setHistory((val) => {
+                      return val.filter((v) => v.id !== isInHistory()?.id);
+                    });
+                  }}
+                />
+              ) : (
+                <Image
+                  className="cursor-pointer"
+                  src="/icons/star.svg"
+                  alt="star"
+                  width={24}
+                  height={24}
+                  onClick={() => {
+                    if (
+                      !textInput ||
+                      !getValues().targetText ||
+                      !selectedSourceLanguage ||
+                      !selectedTargetLanguage
+                    )
+                      return toast.error("Required Fields are empty");
+                    setHistory((val) => {
+                      return [
+                        ...val,
+                        {
+                          id: new Date().getTime(),
+                          source: {
+                            language: selectedSourceLanguage,
+                            value: textInput,
+                          },
+                          target: {
+                            language: selectedTargetLanguage,
+                            value: getValues()?.targetText,
+                          },
+                        },
+                      ];
+                    });
+                  }}
+                />
+              )}
             </div>
           </div>
 
@@ -206,8 +265,8 @@ function Main() {
                   {isSummarizing ? (
                     <Image
                       className="cursor-pointer move-horizontal"
-                      src="/icons/arrow.svg"
-                      alt="star"
+                      src="/icons/arrowRight.svg"
+                      alt="arrow"
                       width={24}
                       height={24}
                     />
@@ -226,8 +285,8 @@ function Main() {
                 {isTranslating ? (
                   <Image
                     className="cursor-pointer move-horizontal"
-                    src="/icons/arrow.svg"
-                    alt="star"
+                    src="/icons/arrowRight.svg"
+                    alt="arrow"
                     width={24}
                     height={24}
                   />
