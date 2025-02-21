@@ -5,7 +5,7 @@ import Select from "react-select";
 
 import { SUPPORTED_LANGUAGES } from "@/lib/constants";
 
-function Dropdown({ name }: { name: string }) {
+function Dropdown({ name, selected }: { name: string; selected: string }) {
   const { control } = useFormContext();
 
   return (
@@ -15,7 +15,9 @@ function Dropdown({ name }: { name: string }) {
       render={({ field }) => (
         <Select
           {...field}
-          options={SUPPORTED_LANGUAGES}
+          options={[
+            ...SUPPORTED_LANGUAGES.filter((lang) => lang.value !== selected),
+          ]}
           theme={(theme) => ({
             ...theme,
             colors: {

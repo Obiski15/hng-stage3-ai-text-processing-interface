@@ -34,4 +34,17 @@
   input {
     @apply disabled:cursor-not-allowed;
   }
+
+  @keyframes move-x {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(20%);
+    }
+  }
+
+  .move-horizontal {
+    animation: move-x 0.7s linear infinite alternate;
+  }
 }

@@ -37,43 +37,38 @@ export async function translateLanguage({
   value,
 }) {
   if ("ai" in self && "translator" in self.ai) {
-    try {
-      const translatorCapabilities = await self.ai.translator.capabilities();
-      const available = translatorCapabilities.languagePairAvailable(
-        sourceLanguage,
-        targetLanguage
-      );
+    const translatorCapabilities = await self.ai.translator.capabilities();
+    const available = translatorCapabilities.languagePairAvailable(
+      sourceLanguage,
+      targetLanguage
+    );
 
-      let translator;
-      if (available === "no") {
-        // language translator isn't useable
-        return;
-      }
-
-      if (available === "readily") {
-        // Create a translator that translates from English to French.
-        translator = await self.ai.translator.create({
-          sourceLanguage,
-          targetLanguage,
-        });
-      } else {
-        // The language translator can be used after model download.
-        translator = await self.ai.translator.create({
-          sourceLanguage,
-          targetLanguage,
-          monitor(m) {
-            m.addEventListener("downloadprogress", (e) => {
-              console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
-            });
-          },
-        });
-      }
-
-      return await translator.translate(value);
-    } catch (error) {
-      console.log(error);
-      throw error;
+    let translator;
+    if (available === "no") {
+      // language translator isn't useable
+      return;
     }
+
+    if (available === "readily") {
+      // Create a translator that translates from English to French.
+      translator = await self.ai.translator.create({
+        sourceLanguage,
+        targetLanguage,
+      });
+    } else {
+      // The language translator can be used after model download.
+      translator = await self.ai.translator.create({
+        sourceLanguage,
+        targetLanguage,
+        monitor(m) {
+          m.addEventListener("downloadprogress", (e) => {
+            console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
+          });
+        },
+      });
+    }
+
+    return await translator.translate(value);
   }
 }
 
